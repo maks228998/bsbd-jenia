@@ -158,6 +158,8 @@ class lib_gui_Window(QMainWindow):
     def show_table(self):
         try:
             cursor = self.conn.cursor()
+            cursor.execute(f"SAVEPOINT SP1")
+
             sql_colum_name = (
                 f"SELECT column_name FROM information_schema.columns WHERE table_name = '{self.table}' ORDER BY ordinal_position;")
             cursor.execute(sql_colum_name)
@@ -207,8 +209,6 @@ class lib_gui_Window(QMainWindow):
             for i in range(len(colum_name)):
                 self.do_show(self.textBrowser[i])
 
-            cursor = self.conn.cursor()
-            cursor.execute(f"SAVEPOINT SP1")
 
             cursor.execute(f"select * from current_user")
             username = cursor.fetchall()
@@ -234,6 +234,8 @@ class lib_gui_Window(QMainWindow):
     def filter_table(self):
         try:
             cursor = self.conn.cursor()
+            cursor.execute(f"SAVEPOINT SP1")
+
             sql_colum_name = (
                 f"SELECT column_name FROM information_schema.columns WHERE table_name = '{self.table}' ORDER BY ordinal_position;")
             cursor.execute(sql_colum_name)
@@ -249,7 +251,6 @@ class lib_gui_Window(QMainWindow):
             sql = sql.replace(';', '')
             sql = sql + ");"
 
-            cursor.execute(f"SAVEPOINT SP1")
             cursor.execute(sql)
             filter_result = cursor.fetchall()
 
@@ -269,8 +270,8 @@ class lib_gui_Window(QMainWindow):
         try:
             cursor = self.conn.cursor()
             cursor.execute(f"SAVEPOINT SP1")
-            sql = (f"INSERT INTO  " + self.table + " VALUES ('")
 
+            sql = (f"INSERT INTO " + self.table + " VALUES ('")
             if self.lib_gui_ui.textEdit_1.toPlainText():
                 sql = sql + self.lib_gui_ui.textEdit_1.toPlainText()
             if self.lib_gui_ui.textEdit_2.toPlainText():
@@ -294,9 +295,7 @@ class lib_gui_Window(QMainWindow):
             sql = sql + "');"
             print('sql', sql)
 
-            cursor.execute(f"SAVEPOINT SP1")
             cursor.execute(sql)
-            self.conn.commit()
 
             cursor.execute(f"RELEASE SAVEPOINT SP1")
 
@@ -307,6 +306,8 @@ class lib_gui_Window(QMainWindow):
     def delete_table(self):
         try:
             cursor = self.conn.cursor()
+            cursor.execute(f"SAVEPOINT SP1")
+
             sql_colum_name = (
                 f"SELECT column_name FROM information_schema.columns WHERE table_name = '{self.table}' ORDER BY ordinal_position;")
             cursor.execute(sql_colum_name)
@@ -322,7 +323,6 @@ class lib_gui_Window(QMainWindow):
             sql = sql.replace(';', '')
             sql = sql + ");"
 
-            cursor.execute(f"SAVEPOINT SP1")
             cursor.execute(sql)
 
             cursor.execute(f"RELEASE SAVEPOINT SP1")
@@ -334,6 +334,8 @@ class lib_gui_Window(QMainWindow):
     def update_table(self):
         try:
             cursor = self.conn.cursor()
+            cursor.execute(f"SAVEPOINT SP1")
+
             sql_colum_name = (
                 f"SELECT column_name FROM information_schema.columns WHERE table_name = '{self.table}' ORDER BY ordinal_position;")
             cursor.execute(sql_colum_name)
@@ -390,7 +392,6 @@ class lib_gui_Window(QMainWindow):
             sql = sql.replace(';', '')
             sql = sql + "');"
 
-            cursor.execute(f"SAVEPOINT SP1")
             cursor.execute(sql)
 
             cursor.execute(f"RELEASE SAVEPOINT SP1")
